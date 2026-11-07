@@ -34,6 +34,7 @@ Bienvenido a la bóveda de conocimiento estructurada de **Nodu**. Este sistema d
 ---
 
 ## 🧪 Aseguramiento de Calidad y Decisiones
+- [[EXECUTION_PLAN]]: Plan maestro de desarrollo modular secuencial y reglas de entrega.
 - [[QA_PLAN]]: Estrategia de pruebas unitarias, integración y validación cruzada.
 - [[DECISIONS]]: Registro de Decisiones de Arquitectura (ADR-001 al ADR-004).
 - [[ROADMAP]]: Estado vivo de las fases del proyecto.
