@@ -5,6 +5,7 @@ import { generateCertificatePDF } from './services/certificate';
 import { LearningPathView } from './components/LearningPathView';
 import { LessonPlayerModal } from './components/LessonPlayerModal';
 import { CheckpointExamModal } from './components/CheckpointExamModal';
+import { ProfileGamificationView } from './components/ProfileGamificationView';
 import { Lesson, UnitCheckpoint } from './types/course';
 
 export const App: React.FC = () => {
@@ -248,96 +249,15 @@ export const App: React.FC = () => {
           </div>
         )}
 
-        {/* PESTAÑA: PERFIL & DATOS */}
+        {/* PESTAÑA: PERFIL & GAMIFICACIÓN EXTENDIDA */}
         {activeTab === 'profile' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-            <div style={{
-              background: '#1e293b',
-              border: '1px solid #2d3748',
-              borderRadius: '20px',
-              padding: '18px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px'
-            }}>
-              <div style={{
-                width: '54px',
-                height: '54px',
-                background: 'linear-gradient(135deg, #00b4d8, #03045e)',
-                borderRadius: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '22px'
-              }}>
-                💻
-              </div>
-              <div>
-                <div style={{ fontSize: '17px', fontWeight: 800 }}>{profile?.name || 'Alex Dev'}</div>
-                <div style={{ fontSize: '12px', color: '#94a3b8', fontFamily: 'var(--font-code)' }}>
-                  Rango: Script Novice (Nivel 1)
-                </div>
-              </div>
-            </div>
-
-            {/* Certificado Emitido */}
-            <div style={{
-              background: '#090e17',
-              border: '2px solid #38bdf8',
-              borderRadius: '16px',
-              padding: '16px'
-            }}>
-              <div style={{
-                background: '#0284c7',
-                color: 'white',
-                fontSize: '10px',
-                fontWeight: 800,
-                padding: '3px 8px',
-                borderRadius: '4px',
-                display: 'inline-block',
-                marginBottom: '8px'
-              }}>
-                CERTIFICADO LOCAL VERIFICADO
-              </div>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: 'white' }}>{course.title}</div>
-              <div style={{ fontSize: '10px', color: '#64748b', fontFamily: 'var(--font-code)', margin: '4px 0 12px' }}>
-                ID: NODU-{course.language.toUpperCase()}-7F3B-C410
-              </div>
-              <button
-                onClick={handleDownloadDemoCert}
-                style={{
-                  width: '100%',
-                  height: '40px',
-                  background: '#38bdf8',
-                  color: '#090e17',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: 800,
-                  cursor: 'pointer'
-                }}
-              >
-                📄 Descargar Certificado en PDF
-              </button>
-            </div>
-
-            {/* Respaldo y Soberanía de Datos */}
-            <button
-              onClick={exportBackupJSON}
-              style={{
-                height: '44px',
-                background: '#334155',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                fontSize: '13px',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
-            >
-              💾 Exportar Copia de Seguridad (JSON)
-            </button>
-          </div>
+          <ProfileGamificationView
+            profile={profile}
+            completedLessonsCount={progress?.completedLessons?.length || 0}
+            activeCoursesCount={Object.keys(courses).length}
+            onDownloadCert={handleDownloadDemoCert}
+            onExportBackup={exportBackupJSON}
+          />
         )}
 
       </main>

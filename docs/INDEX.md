@@ -9,6 +9,7 @@ Bienvenido a la bóveda de conocimiento estructurada de **Nodu**. Este sistema d
 - [[UX_GUIDELINES]]: Principios de experiencia, 22 pantallas mapeadas y ergonomía táctil de código.
 - [[DESIGN_SYSTEM]]: Tokens CSS, paleta *Neo-Terminal Friendly*, componentes e iconografía SVG propia.
 - [[GAMIFICATION]]: Mecánicas de hábito, cálculo de XP, niveles, rachas protegidas (*Streak Freeze*) y medallas.
+- [[ACHIEVEMENTS_SYSTEM]]: Vitrina de logros locales, rangos de desarrollador y matriz de constancia.
 
 ---
 
