@@ -17,6 +17,7 @@ interface AppState {
   setActiveCourseId: (courseId: string) => void;
   loadInitialData: () => void;
   completeLesson: (lessonId: string, earnedXp: number) => Promise<void>;
+  updateSettings: (newSettings: Partial<UserProfile['settings']>) => Promise<void>;
   exportBackupJSON: () => Promise<void>;
 }
 
@@ -65,6 +66,14 @@ export const useAppStore = create<AppState>((set, get) => ({
         percentComplete: Math.min(100, Math.round((completed.length / 3) * 100))
       }
     });
+  },
+
+  updateSettings: async (newSettings) => {
+    const { profile } = get();
+    if (!profile) return;
+    const merged = { ...profile.settings, ...newSettings };
+    await db.profile.update('local_user', { settings: merged });
+    set({ profile: { ...profile, settings: merged } });
   },
 
   exportBackupJSON: async () => {

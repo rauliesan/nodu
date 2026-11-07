@@ -1,5 +1,12 @@
 import Dexie, { Table } from 'dexie';
 
+export interface UserPreferences {
+  theme: 'dark' | 'light';
+  soundEnabled: boolean;
+  reducedMotion: boolean;
+  largeFont: boolean;
+}
+
 export interface UserProfile {
   id: string; // 'local_user'
   name: string;
@@ -11,6 +18,7 @@ export interface UserProfile {
   currentLevel: number;
   gems: number;
   streakFreezeAvailable: number;
+  settings: UserPreferences;
   createdAt: number;
 }
 
@@ -64,6 +72,13 @@ export class NoduDatabase extends Dexie {
 
 export const db = new NoduDatabase();
 
+export const defaultSettings: UserPreferences = {
+  theme: 'dark',
+  soundEnabled: true,
+  reducedMotion: false,
+  largeFont: false
+};
+
 // Función de inicialización automática de perfil por defecto si no existe
 export async function initializeLocalUser() {
   const existing = await db.profile.get('local_user');
@@ -80,6 +95,7 @@ export async function initializeLocalUser() {
       currentLevel: 1,
       gems: 28,
       streakFreezeAvailable: 1,
+      settings: defaultSettings,
       createdAt: Date.now()
     });
 
@@ -96,5 +112,8 @@ export async function initializeLocalUser() {
       percentComplete: 33,
       updatedAt: Date.now()
     });
+  } else if (!existing.settings) {
+    // Migración transparente si existía registro previo sin settings
+    await db.profile.update('local_user', { settings: defaultSettings });
   }
 }

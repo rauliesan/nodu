@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useAppStore } from './store/appStore';
-import { initializeLocalUser } from './services/db';
+import { initializeLocalUser, defaultSettings } from './services/db';
 import { generateCertificatePDF } from './services/certificate';
 import { LearningPathView } from './components/LearningPathView';
 import { LessonPlayerModal } from './components/LessonPlayerModal';
 import { CheckpointExamModal } from './components/CheckpointExamModal';
 import { ProfileGamificationView } from './components/ProfileGamificationView';
+import { SettingsModal } from './components/SettingsModal';
 import { Lesson, UnitCheckpoint } from './types/course';
 
 export const App: React.FC = () => {
@@ -19,11 +20,13 @@ export const App: React.FC = () => {
     progress,
     loadInitialData,
     completeLesson,
+    updateSettings,
     exportBackupJSON
   } = useAppStore();
 
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [activeCheckpoint, setActiveCheckpoint] = useState<{ checkpoint: UnitCheckpoint; unitTitle: string } | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     initializeLocalUser().then(() => {
@@ -32,6 +35,8 @@ export const App: React.FC = () => {
   }, []);
 
   const course = courses[activeCourseId] || courses['nodu-course-python-101'];
+  const userSettings = profile?.settings || defaultSettings;
+  const isLight = userSettings.theme === 'light';
 
   const handleOpenLesson = (lessonId: string) => {
     for (const unit of course.units) {
@@ -68,15 +73,22 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="app-frame">
-      {/* 1. Header Global con Iconos SVG Vectoriales */}
+    <div
+      className="app-frame"
+      style={{
+        backgroundColor: isLight ? '#f8fafc' : '#171e2e',
+        color: isLight ? '#0f172a' : '#f8fafc',
+        fontSize: userSettings.largeFont ? '16px' : '14px'
+      }}
+    >
+      {/* 1. Header Global con Iconos SVG Vectoriales y Ajustes */}
       <header style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '16px 20px 12px',
-        backgroundColor: '#171e2e',
-        borderBottom: '1px solid #2d3748',
+        backgroundColor: isLight ? '#ffffff' : '#171e2e',
+        borderBottom: `1px solid ${isLight ? '#e2e8f0' : '#2d3748'}`,
         zIndex: 10
       }}>
         <div
@@ -85,10 +97,10 @@ export const App: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            background: '#1e293b',
+            background: isLight ? '#f1f5f9' : '#1e293b',
             padding: '6px 12px',
             borderRadius: '100px',
-            border: '1px solid #2d3748',
+            border: `1px solid ${isLight ? '#cbd5e1' : '#2d3748'}`,
             fontSize: '13px',
             fontWeight: 700,
             cursor: 'pointer'
@@ -108,10 +120,10 @@ export const App: React.FC = () => {
             fontWeight: 700,
             fontFamily: 'var(--font-code)',
             color: '#fb8500',
-            background: 'rgba(30, 41, 59, 0.6)',
+            background: isLight ? '#fff7ed' : 'rgba(30, 41, 59, 0.6)',
             padding: '4px 8px',
             borderRadius: '8px',
-            border: '1px solid #2d3748'
+            border: `1px solid ${isLight ? '#fed7aa' : '#2d3748'}`
           }}>
             <svg style={{ width: '16px', height: '16px' }} viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2c-.3 2.1-1.8 3.8-3.3 5.4C7.1 9 5.5 11 5.5 13.5c0 3.6 2.9 6.5 6.5 6.5s6.5-2.9 6.5-6.5c0-3.3-2.5-6.1-4.2-8.5C13.2 3.6 12.4 2.8 12 2zm.2 16.5c-2.3 0-4.2-1.8-4.2-4.1 0-1.4 1-2.7 2-3.8.8-.9 1.7-1.9 2-3 1.1 1.4 2.4 3 2.4 4.8 0 3.4-1 6.1-2.2 6.1z"/>
@@ -128,10 +140,10 @@ export const App: React.FC = () => {
             fontWeight: 700,
             fontFamily: 'var(--font-code)',
             color: '#ffb703',
-            background: 'rgba(30, 41, 59, 0.6)',
+            background: isLight ? '#fefce8' : 'rgba(30, 41, 59, 0.6)',
             padding: '4px 8px',
             borderRadius: '8px',
-            border: '1px solid #2d3748'
+            border: `1px solid ${isLight ? '#fef08a' : '#2d3748'}`
           }}>
             <svg style={{ width: '16px', height: '16px' }} viewBox="0 0 24 24" fill="currentColor">
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
@@ -139,25 +151,26 @@ export const App: React.FC = () => {
             <span>{profile?.totalXp || 140} XP</span>
           </div>
 
-          {/* Diamante de Gemas */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            fontSize: '13px',
-            fontWeight: 700,
-            fontFamily: 'var(--font-code)',
-            color: '#e63946',
-            background: 'rgba(30, 41, 59, 0.6)',
-            padding: '4px 8px',
-            borderRadius: '8px',
-            border: '1px solid #2d3748'
-          }}>
-            <svg style={{ width: '16px', height: '16px' }} viewBox="0 0 24 24" fill="currentColor">
-              <path d="M6 3h12l5 7-11 11L1 10l5-7zm1.6 2l-3.3 4.6h3.6L9.6 5H7.6zm3.9 0l-1.5 4.6h4l-1.5-4.6H11.5zm3.9 0l1.7 4.6h3.6L16.4 5h-1zm3.6 6.6H5l7 7 7-7z"/>
-            </svg>
-            <span>{profile?.gems || 28}</span>
-          </div>
+          {/* Botón de Ajustes */}
+          <button
+            type="button"
+            onClick={() => setShowSettings(true)}
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              background: isLight ? '#f1f5f9' : '#1e293b',
+              border: `1px solid ${isLight ? '#cbd5e1' : '#2d3748'}`,
+              color: isLight ? '#475569' : '#94a3b8',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '14px'
+            }}
+          >
+            ⚙️
+          </button>
         </div>
       </header>
 
@@ -187,26 +200,28 @@ export const App: React.FC = () => {
                   setActiveTab('learn');
                 }}
                 style={{
-                  background: '#1e293b',
-                  border: `2px solid ${activeCourseId === c.id ? '#00b4d8' : '#2d3748'}`,
+                  background: isLight ? '#ffffff' : '#1e293b',
+                  border: `2px solid ${activeCourseId === c.id ? '#00b4d8' : isLight ? '#e2e8f0' : '#2d3748'}`,
                   borderRadius: '16px',
                   padding: '16px',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  boxShadow: isLight ? '0 2px 8px rgba(0,0,0,0.04)' : 'none'
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ fontSize: '16px', fontWeight: 800, color: 'white' }}>{c.title}</div>
+                  <div style={{ fontSize: '16px', fontWeight: 800, color: isLight ? '#0f172a' : 'white' }}>{c.title}</div>
                   <span style={{
                     fontSize: '11px',
-                    background: '#0f172a',
+                    background: isLight ? '#f1f5f9' : '#0f172a',
                     padding: '3px 8px',
                     borderRadius: '6px',
-                    color: '#38bdf8'
+                    color: '#0284c7',
+                    fontWeight: 700
                   }}>
                     {c.difficulty}
                   </span>
                 </div>
-                <p style={{ fontSize: '13px', color: '#94a3b8', margin: '8px 0 12px' }}>{c.shortDescription}</p>
+                <p style={{ fontSize: '13px', color: '#64748b', margin: '8px 0 12px' }}>{c.shortDescription}</p>
                 <button style={{
                   background: activeCourseId === c.id ? '#00b4d8' : '#334155',
                   color: 'white',
@@ -227,22 +242,32 @@ export const App: React.FC = () => {
         {activeTab === 'challenges' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <h2 style={{ fontSize: '18px', fontWeight: 800 }}>Desafíos Diarios</h2>
-            <div style={{ background: '#1e293b', border: '1px solid #2d3748', borderRadius: '16px', padding: '16px' }}>
+            <div style={{
+              background: isLight ? '#ffffff' : '#1e293b',
+              border: `1px solid ${isLight ? '#e2e8f0' : '#2d3748'}`,
+              borderRadius: '16px',
+              padding: '16px'
+            }}>
               <div style={{ fontSize: '15px', fontWeight: 700 }}>🔥 Mantén tu Racha Activa</div>
-              <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 10px' }}>
+              <p style={{ fontSize: '12px', color: '#64748b', margin: '4px 0 10px' }}>
                 Completa 1 lección hoy para alcanzar los 6 días consecutivos.
               </p>
-              <div style={{ height: '8px', background: '#0f172a', borderRadius: '100px', overflow: 'hidden' }}>
+              <div style={{ height: '8px', background: isLight ? '#f1f5f9' : '#0f172a', borderRadius: '100px', overflow: 'hidden' }}>
                 <div style={{ width: '80%', height: '100%', background: '#fb8500' }}></div>
               </div>
             </div>
 
-            <div style={{ background: '#1e293b', border: '1px solid #2d3748', borderRadius: '16px', padding: '16px' }}>
+            <div style={{
+              background: isLight ? '#ffffff' : '#1e293b',
+              border: `1px solid ${isLight ? '#e2e8f0' : '#2d3748'}`,
+              borderRadius: '16px',
+              padding: '16px'
+            }}>
               <div style={{ fontSize: '15px', fontWeight: 700 }}>⚡ Objetivo de XP Diario</div>
-              <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 10px' }}>
+              <p style={{ fontSize: '12px', color: '#64748b', margin: '4px 0 10px' }}>
                 Acumula 50 XP resolviendo lecciones. Progreso: {profile?.totalXp || 0} / 50 XP.
               </p>
-              <div style={{ height: '8px', background: '#0f172a', borderRadius: '100px', overflow: 'hidden' }}>
+              <div style={{ height: '8px', background: isLight ? '#f1f5f9' : '#0f172a', borderRadius: '100px', overflow: 'hidden' }}>
                 <div style={{ width: `${Math.min(100, ((profile?.totalXp || 0) / 50) * 100)}%`, height: '100%', background: '#ffb703' }}></div>
               </div>
             </div>
@@ -265,8 +290,8 @@ export const App: React.FC = () => {
       {/* 3. Barra Inferior Global con Iconos de Identidad */}
       <nav style={{
         height: '68px',
-        backgroundColor: '#171e2e',
-        borderTop: '1px solid #2d3748',
+        backgroundColor: isLight ? '#ffffff' : '#171e2e',
+        borderTop: `1px solid ${isLight ? '#e2e8f0' : '#2d3748'}`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-around',
@@ -392,6 +417,15 @@ export const App: React.FC = () => {
           unitTitle={activeCheckpoint.unitTitle}
           onClose={() => setActiveCheckpoint(null)}
           onPassCheckpoint={handlePassCheckpoint}
+        />
+      )}
+
+      {/* 6. Modal de Ajustes y Accesibilidad (Módulo 1) */}
+      {showSettings && (
+        <SettingsModal
+          settings={userSettings}
+          onUpdateSettings={updateSettings}
+          onClose={() => setShowSettings(false)}
         />
       )}
     </div>
