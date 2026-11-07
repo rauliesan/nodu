@@ -1,0 +1,65 @@
+:root {
+  --primary: #00b4d8;
+  --primary-hover: #0096c7;
+  --primary-border: #0077b6;
+  --xp-gold: #ffb703;
+  --streak-fire: #fb8500;
+  --gem-ruby: #e63946;
+  --success: #10b981;
+  --success-bg: #d1fae5;
+  --error: #ef4444;
+  --error-bg: #fee2e2;
+  --bg-app: #0e131f;
+  --bg-surface: #171e2e;
+  --bg-card: #1e293b;
+  --border-subtle: #2d3748;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.app-frame {
+  width: 100%;
+  max-width: 440px;
+  height: 94vh;
+  max-height: 890px;
+  background-color: var(--bg-surface);
+  border: 2px solid var(--border-subtle);
+  border-radius: 36px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 480px) {
+  .app-frame {
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
+}
