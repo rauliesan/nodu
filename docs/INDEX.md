@@ -17,6 +17,7 @@ Bienvenido a la bóveda de conocimiento estructurada de **Nodu**. Este sistema d
 - [[COURSE_SCHEMA]]: Contratos de tipado TypeScript para unidades, niveles y los 10 tipos de ejercicios.
 - [[LEARNING_ENGINE]]: Máquina de estados de lección y validadores puros deterministas.
 - [[LESSON_PLAYER]]: Arquitectura y flujo del reproductor inmersivo de lecciones polimórfico.
+- [[AUDIO_FEEDBACK]]: Síntesis sonora nativa con Web Audio API y micro-recompensas.
 - [[CERTIFICATES]]: Generación de certificados vectoriales PDF en cliente con firma criptográfica SHA-256.
 - [[OFFLINE_STORAGE]]: Persistencia IndexedDB reactiva con Dexie.js, Service Worker PWA y respaldo JSON.
 

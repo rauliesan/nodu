@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Lesson } from '../types/course';
 import { ExerciseUniversalHost } from './exercises/ExerciseUniversalHost';
 import { validateExercise, ValidationResult } from '../services/exerciseValidator';
+import { soundFX } from '../services/sound';
+import confetti from 'canvas-confetti';
 
 interface LessonPlayerModalProps {
   lesson: Lesson;
@@ -29,7 +31,10 @@ export const LessonPlayerModal: React.FC<LessonPlayerModalProps> = ({
     setValidationResult(result);
 
     if (result.isValid) {
+      soundFX.playSuccess();
       setAccumulatedXp((prev) => prev + result.score);
+    } else {
+      soundFX.playError();
     }
   };
 
@@ -40,7 +45,16 @@ export const LessonPlayerModal: React.FC<LessonPlayerModalProps> = ({
     if (currentExerciseIndex + 1 < lesson.exercises.length) {
       setCurrentExerciseIndex((prev) => prev + 1);
     } else {
-      // Lección finalizada con éxito
+      // Lección finalizada con éxito: celebración con audio y confeti
+      soundFX.playCelebration();
+      try {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      } catch (_) {}
+
       onCompleteLesson(accumulatedXp || lesson.xpReward);
       onClose();
     }
